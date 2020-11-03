@@ -23,7 +23,7 @@ Term: Fall 2020
 + Tianle Zhu:
 + Zhenglei Chen: 
 + Mingzhi Zhang:
-+ Lu Yao:
++ Luyao Sun:
 + Mina Zhang: 
 
 Following [suggestions](http://nicercode.github.io/blog/2013-04-05-projects/) by [RICH FITZJOHN](http://nicercode.github.io/about/#Team) (@richfitz). This folder is orgarnized as follows.
