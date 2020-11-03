@@ -3,8 +3,8 @@
 ### Data folder
 
 The data directory contains data used in the analysis. This is treated as read only; in paricular the R/python files are never allowed to write to the files in here. Depending on the project, these might be csv files, a database, and the directory itself may have subdirectories.
--README.md
--train_set folder:
+- README.md
+- train_set folder:
 **Please download the train_set folder from following link**
 **Link**
 	- images folder (3000 images)
