@@ -12,7 +12,7 @@ Term: Fall 2020
 	+ Zhenglei Chen 
 	+ Mingzhi Zhang 
 	+ Luyao Sun
-	+ Mina Zhang 
+	+ Mina Jiang 
 
 + Project summary: In this project, we created a classification engine for facial emotion recognition. 
 
@@ -24,7 +24,7 @@ Term: Fall 2020
 + Zhenglei Chen: 
 + Mingzhi Zhang:
 + Luyao Sun:
-+ Mina Zhang: 
++ Mina Jiang: 
 
 Following [suggestions](http://nicercode.github.io/blog/2013-04-05-projects/) by [RICH FITZJOHN](http://nicercode.github.io/about/#Team) (@richfitz). This folder is orgarnized as follows.
 
