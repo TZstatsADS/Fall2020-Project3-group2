@@ -11,7 +11,7 @@ Term: Fall 2020
 	+ Tianle Zhu 
 	+ Zhenglei Chen 
 	+ Mingzhi Zhang 
-	+ Lu Yao
+	+ Luyao Sun
 	+ Mina Zhang 
 
 + Project summary: In this project, we created a classification engine for facial emotion recognition. 
