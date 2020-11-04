@@ -1,10 +1,10 @@
 ---
 title: "Project 3 Group 2 Prodictive Analytics for a Facial Emotion Recognition Task"
 output:
+  pdf_document: default
+  html_notebook: default
   html_document:
     df_print: paged
-  html_notebook: default
-  pdf_document: default
 ---
 # Baseline GBM model and Improved XGB model
 In your final repo, there should be an R markdown file that organizes **all computational steps** for evaluating your proposed Facial Expression Recognition framework. 
@@ -209,7 +209,7 @@ tm_train_gbm_baseline <- system.time(gbm.baseline <- train_gbm(train_data = dat_
 
 ### Step 5: Run test on test images
 ```{r test}
-load('../output/gbm.baseline')
+load('../output/gbm.baseline.RData')
 run.test = TRUE
 tm_test = NA
 tm_test_gbm_baseline <- NA
@@ -288,7 +288,7 @@ res_cv_rw
 ##### Cross Validation with SMOTE
 ```{r}
 # cross validation with SMOTE, tuning nrounds and max_depth
-source("../lib/cross_validation.R")
+source("../lib/cross_validation_xgb.R")
 
 nrounds_list <- seq(20, 100, 20)
 max_depth_list <- c(10, 20)
@@ -325,6 +325,7 @@ tm_train_rw <- system.time(fit_train_rw <- train.xgb(train_xgb, nrounds = 100, m
 save(fit_train_rw, file="../output/fit_train_rw.RData")
 ```
 
+#### SMOTE
 ```{r}
 # oversampling data using SMOTE method
 library(DMwR)
@@ -334,7 +335,7 @@ tm_smote <- system.time(train_smote <- SMOTE(label ~ ., dat_train, perc.over = 2
 tm_smote
 ```
 
-#### SMOTE
+
 ```{r}
 train_label <- as.numeric(levels(train_smote$label))[train_smote$label]
 train_xgb <- xgb.DMatrix(as.matrix(train_smote[, -6007]), label = train_label)
@@ -412,7 +413,7 @@ cat("The F score of model XGB with reweighting sample, nrounds = 100, max_depth 
 #### SMOTE
 ```{r}
 # SMOTE
-source("../lib/test.R")
+source("../lib/test_xgb.R")
 tm_test = NA
 feature_test <- as.matrix(dat_test[, -6007])
 if(run.test){
