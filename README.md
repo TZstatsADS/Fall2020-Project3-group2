@@ -21,12 +21,12 @@ Term: Fall 2020
 <img src="figs/results.png" width="1000"/>
  + Comparing to other models, SVM achieve the highest accuracy 82.67% and AUC score 82.77% in the testing data. Thus, we choose SVM model as our advanced model.
 
-**Contribution statement**: ([default](doc/a_note_on_contributions.md)) All team members contribute to this project. All team members approve our work presented in this GitHub repository including this contributions statement. 
-+ Tianle Zhu: 
-+ Zhenglei Chen: 
-+ Mingzhi Zhang:
-+ Luyao Sun:
-+ Mina Jiang: 
++ **Contribution statement**: ([default](doc/a_note_on_contributions.md)) All team members contribute to this project. All team members approve our work presented in this GitHub repository including this contributions statement. 
+ + Tianle Zhu: 
+ + Zhenglei Chen: 
+ + Mingzhi Zhang:
+ + Luyao Sun:
+ + Mina Jiang: 
 
 Following [suggestions](http://nicercode.github.io/blog/2013-04-05-projects/) by [RICH FITZJOHN](http://nicercode.github.io/about/#Team) (@richfitz). This folder is orgarnized as follows.
 
