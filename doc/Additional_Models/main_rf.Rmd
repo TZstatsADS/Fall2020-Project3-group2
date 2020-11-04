@@ -1,0 +1,285 @@
+---
+title: "Main_Random Forest"
+author: "Luyao Sun"
+output:
+  html_document:
+    df_print: paged
+  html_notebook: default
+  pdf_document: default
+---
+
+```{r message=FALSE}
+if(!require("EBImage")){
+  install.packages("BiocManager")
+  BiocManager::install("EBImage")
+}
+if(!require("R.matlab")){
+  install.packages("R.matlab")
+}
+if(!require("readxl")){
+  install.packages("readxl")
+}
+
+if(!require("dplyr")){
+  install.packages("dplyr")
+}
+if(!require("readxl")){
+  install.packages("readxl")
+}
+
+if(!require("ggplot2")){
+  install.packages("ggplot2")
+}
+
+if(!require("caret")){
+  install.packages("caret")
+}
+
+if(!require("glmnet")){
+  install.packages("glmnet")
+}
+
+if(!require("WeightedROC")){
+  install.packages("WeightedROC")
+}
+
+library(R.matlab)
+library(readxl)
+library(dplyr)
+library(EBImage)
+library(ggplot2)
+library(caret)
+library(glmnet)
+library(WeightedROC)
+library(randomForest)
+library(ROSE)
+# library(tidymodels)
+# library(doParallel)
+```
+
+### Step 0 set work directories
+```{r wkdir, eval=FALSE}
+set.seed(2020)
+#setwd("C:/Users/Bee/Desktop/2020 FALL/github/Fall2020-Project3-group_2/doc")
+```
+
+Provide directories for training images. Training images and Training fiducial points will be in different subfolders. 
+```{r}
+train_dir <- "../data/train_set/" # This will be modified for different data sets.
+train_image_dir <- paste(train_dir, "images/", sep="")
+train_pt_dir <- paste(train_dir,  "points/", sep="")
+train_label_path <- paste(train_dir, "label.csv", sep="") 
+```
+
+### Step 1: set up controls for evaluation experiments.
+
+In this chunk, we have a set of controls for the evaluation experiments. 
+
++ (T/F) cross-validation on the training set
++ (T/F) reweighting the samples for training set 
++ (number) K, the number of CV folds
++ (T/F) process features for training set
++ (T/F) run evaluation on an independent test set
++ (T/F) process features for test set
+
+```{r exp_setup}
+ run.cv <- TRUE # run cross-validation on the training set
+ sample.reweight <- TRUE # run sample reweighting in model training
+ K <- 5  # number of CV folds
+ run.feature.train <- TRUE # process features for training set
+ run.test <- TRUE # run evaluation on an independent test set
+ run.feature.test <- TRUE # process features for test set
+```
+
+Using cross-validation or independent test set evaluation, we compare the performance of models with different specifications. In this Starter Code, we tune parameter lambda (the amount of shrinkage) for logistic regression with LASSO penalty.
+
+```{r model_setup}
+ntree = c(60,80,100)
+model_rf = paste("Random Forest with number of trees =", ntree)
+```
+
+### Step 2: import data and train-test split 
+```{r}
+#train-test split
+info <- read.csv(train_label_path)
+n <- nrow(info)
+n_train <- round(n*(4/5), 0)
+set.seed(0)
+train_idx <- sample(info$Index, n_train, replace = F)
+test_idx <- setdiff(info$Index, train_idx)
+```
+
+If you choose to extract features from images, such as using Gabor filter, R memory will exhaust all images are read together. The solution is to repeat reading a smaller batch(e.g 100) and process them. 
+```{r}
+n_files <- length(list.files(train_image_dir))
+
+# image_list <- list()
+# for(i in 1:100){
+#    image_list[[i]] <- readImage(paste0(train_image_dir, sprintf("%04d", i), ".jpg"))
+# }
+```
+
+Fiducial points are stored in matlab format. In this step, we read them and store them in a list.
+```{r read fiducial points}
+#function to read fiducial points
+#input: index
+#output: matrix of fiducial points corresponding to the index
+readMat.matrix <- function(index){
+     return(round(readMat(paste0(train_pt_dir, sprintf("%04d", index), ".mat"))[[1]],0))
+}
+
+#load fiducial points
+fiducial_pt_list <- lapply(1:n_files, readMat.matrix)
+save(fiducial_pt_list, file="../output/fiducial_pt_list.RData")
+```
+
+### Step 3: construct features and responses
+
++ The follow plots show how pairwise distance between fiducial points can work as feature for facial emotion recognition.
+
+  + In the first column, 78 fiducials points of each emotion are marked in order. 
+  + In the second column distributions of vertical distance between right pupil(1) and  right brow peak(21) are shown in  histograms. For example, the distance of an angry face tends to be shorter than that of a surprised face.
+  + The third column is the distributions of vertical distances between right mouth corner(50)
+and the midpoint of the upper lip(52).  For example, the distance of an happy face tends to be shorter than that of a sad face.
+
+![Figure1](../figs/feature_visualization.jpg)
+
+`feature.R` should be the wrapper for all your feature engineering functions and options. The function `feature( )` should have options that correspond to different scenarios for your project and produces an R object that contains features and responses that are required by all the models you are going to evaluate later. 
+  
+  + `feature.R`
+  + Input: list of images or fiducial point
+  + Output: an RData file that contains extracted features and corresponding responses
+
+```{r feature}
+source("../lib/feature.R")
+tm_feature_train <- NA
+if(run.feature.train){
+  tm_feature_train <- system.time(dat_train <- feature(fiducial_pt_list, train_idx))
+  save(dat_train, file="../output/feature_train.RData")
+}else{
+  load(file="../output/feature_train.RData")
+}
+
+tm_feature_test <- NA
+if(run.feature.test){
+  tm_feature_test <- system.time(dat_test <- feature(fiducial_pt_list, test_idx))
+  save(dat_test, file="../output/feature_test.RData")
+}else{
+  load(file="../output/feature_test.RData")
+}
+
+# dim(dat_train)
+# ##[1] 2400 6007
+# dim(dat_test)
+# ##[1]  600 6007
+```
+
+### Step 4: Train a classification model with training features and responses
+Call the train model and test model from library. 
+
+`train.R` and `test.R` should be wrappers for all your model training steps and your classification/prediction steps. 
+
++ `train.R`
+  + Input: a data frame containing features and labels and a parameter list.
+  + Output:a trained model
++ `test.R`
+  + Input: the fitted classification model using training data and processed features from testing images 
+  + Input: an R object that contains a trained classifier.
+  + Output: training model specification
+
++ In this Starter Code, we use logistic regression with LASSO penalty to do classification. 
+
+```{r loadlib}
+source("../lib/train_rf.R")
+source("../lib/test_rf.R")
+source("../lib/cross_validation_rf.R")
+source("../lib/cross_validation_rf_weighted.R")
+```
+
+##### Model selection with cross-validation without weighting
+```{r rf_cv, include=FALSE}
+if(run.cv){
+  res_cv_rf <- matrix(0, nrow = length(ntree), ncol = 2)
+  for(i in 1:length(ntree)){
+    cat("Number of trees=", ntree[i], "\n")
+    res_cv_rf[i,] <- cvrf.function(dat_train, K, ntree[i])
+  save(res_cv_rf, file="../output/res_cv_rf.RData")
+  }
+}
+```
+
+```{r rf_cv result}
+res_cv_rf <- as.data.frame(res_cv_rf)
+colnames(res_cv_rf) <- c("mean_error", "sd_error")
+res_cv_rf$ntree = as.integer(ntree)
+res_cv_rf
+```
+
+##### Model selection with cross-validation with weighting
+```{r rf_cv_weighted, include=FALSE}
+if(sample.reweight){
+  res_cv_rf_w <- matrix(0, nrow = length(ntree), ncol = 2)
+  for(i in 1:length(ntree)){
+    cat("Number of trees=", ntree[i], "\n")
+    res_cv_rf_w[i,] <- cvrf_weight.function(dat_train, K, ntree[i])
+  save(res_cv_rf_w, file="../output/res_cv_rf_w.RData")
+  }
+}
+```
+
+```{r rf_cv_weighted result}
+res_cv_rf_w <- as.data.frame(res_cv_rf_w)
+colnames(res_cv_rf_w) <- c("mean_error", "sd_error")
+res_cv_rf_w$ntree = as.integer(ntree)
+res_cv_rf_w
+```
+
+```{r best_model_rf}
+#
+if(run.cv){
+  res_cv_total <- rbind(res_cv_rf,res_cv_rf_w)
+  ntree_best <- res_cv_total$ntree[which.min(res_cv_total[,1])]
+}
+save(ntree_best,file = "../output/ntree_best_rf.Rdata")
+
+```
+
+```{r}
+##Training
+tm_train=NA
+tm_train <- system.time(fit_train_rf <- train_rf(dat_train, ntree_best))
+save(fit_train_rf, file="../output/fit_train_rf.RData")
+
+##Testing
+tm_test=NA
+if(run.test){
+  load(file="../output/fit_train_rf.RData")
+  tm_test <- system.time(pred_rf <- predict(fit_train_rf,dat_test))
+}
+
+```
+
+```{r }
+##evaluation
+test_label <- dat_test$label
+accu <- mean(test_label == pred_rf)
+tpr.fpr <- WeightedROC(as.numeric(pred_rf), test_label)
+auc <- WeightedAUC(tpr.fpr)
+
+cat("The accuracy of model:", model_rf[which.min(res_cv_rf$mean_error)], "is", accu*100, "%.\n")
+cat("The AUC of model:", model_rf[which.min(res_cv_rf$mean_error)], "is", auc, ".\n")
+
+```
+
+### Summarize Running Time
+Prediction performance matters, so does the running times for constructing features and for training the model, especially when the computation resource is limited. 
+```{r running_time}
+cat("Time for constructing training features=", tm_feature_train[1], "s \n")
+cat("Time for constructing testing features=", tm_feature_test[1], "s \n")
+cat("Time for training model=", tm_train[1], "s \n") 
+cat("Time for testing model=", tm_test[1], "s \n")
+```
+
+###Reference
+- Du, S., Tao, Y., & Martinez, A. M. (2014). Compound facial expressions of emotion. Proceedings of the National Academy of Sciences, 111(15), E1454-E1462.
+
