@@ -28,7 +28,7 @@ Term: Fall 2020
   + Zhenglei Chen: developed baseline classification model GBM and presented project 3.
   + Mingzhi Zhang:
   + Luyao Sun: involved in every stage of the project's development and discussion, constructed Random Forest model, tuning the hyperparameter, cross validation and integrated the model into main_rf file.
-  + Mina Jiang: 
+  + Mina Jiang: developed the K Nearest Neighbors model and implemented related procedures such as cross validation for finding the best parameter and outputting the corresponding results. Contributed to analysis of the disadvantages of this model during the stage of presentation preparation. 
 
 Following [suggestions](http://nicercode.github.io/blog/2013-04-05-projects/) by [RICH FITZJOHN](http://nicercode.github.io/about/#Team) (@richfitz). This folder is orgarnized as follows.
 
