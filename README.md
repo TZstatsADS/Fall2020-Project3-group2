@@ -27,7 +27,7 @@ Term: Fall 2020
   + Tianle Zhu: 
   + Zhenglei Chen: 
   + Mingzhi Zhang:
-  + Luyao Sun:
+  + Luyao Sun: involved in every stage of the project's development and discussion, constructed Random Forest model, tuning the hyperparameter, cross validation and integrated the model into main_rf file.
   + Mina Jiang: 
 
 Following [suggestions](http://nicercode.github.io/blog/2013-04-05-projects/) by [RICH FITZJOHN](http://nicercode.github.io/about/#Team) (@richfitz). This folder is orgarnized as follows.
