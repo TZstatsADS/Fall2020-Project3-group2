@@ -18,14 +18,14 @@ Term: Fall 2020
 <img src="figs/predictiveprogram.png" width="500"/>
 
 + **Project Results**: The following table is our model results. 
-  + Comparing to other models, SVM achieve the highest accuracy 82.67% and AUC score 82.77% in the testing data. Thus, we choose SVM model as our advanced model.
+  + Comparing to other models, XGB with smote model achieve the highest accuracy 81.33% and AUC score 0.818 in the testing data. Thus, we choose XGB with smote model as our advanced model.
 <img src="figs/results.png" width="1000"/>
 
    
 
 + **Contribution statement**: ([default](doc/a_note_on_contributions.md)) All team members contribute to this project. All team members approve our work presented in this GitHub repository including this contributions statement. 
-  + Tianle Zhu: implemented SVM models and VGG16 model. Improved the SVM model by adding PCA and weighted the imbalanced training data. Fine-tune the VGG16 models by trying different hyper parameters. I also organized the github repository, debugged the code from main.file and write the README files.
-  + Zhenglei Chen: developed baseline classification model GBM and presented project 3.
+  + Tianle Zhu: implemented SVM models and VGG16 model. Improved the SVM model by adding PCA and weighted the imbalanced training data in the main_SVM.Rmd file. Fine-tune the VGG16 models by trying different hyper parameters in the VGG16 Model.ipynb. I also organized the github repository, debugged the code from Main.file and write the README files. Participated in every stage of the proejct's discussion.
+  + Zhenglei Chen: developed baseline classification model GBM and presented project 3. Participated in every stage of the proejct's discussion.
   + Mingzhi Zhang: Implemented XGBoost model with different methods to deal with imbalanced training data, including re-weighting method and re-sampling method with SMOTE. Fine-tuned the XGBoost model using cross-validation. Prepared the code for the in-class testing. Participated in every stage of the proejct's discussion.
   + Luyao Sun: involved in every stage of the project's development and discussion, constructed Random Forest model, tuning the hyperparameter, cross validation and integrated the model into main_rf file.
   + Mina Jiang: developed the K Nearest Neighbors model and implemented related procedures such as cross validation for finding the best parameter and outputting the corresponding results. Contributed to analysis of the disadvantages of this model during the stage of presentation preparation. 
