@@ -16,8 +16,8 @@ Term: Fall 2020
 
 + Project summary: In this project, we created a classification engine for facial emotion recognition. We implemented a Gradient Boosting Machine (GBM) to train a baseline model on 3000 facial images with the extracted features to recognize the emotion from new facial images. Before the modeling, we did data preprocessing. Due to the fact that our data contains high dimensional features, we used Principal component analysis (PCA) to reduce the dimensional data by selecting the most important principal components that capture maximum information. Moreover, our data is imbalanced, so we tried the oversampling technique such as the weighted and smote method to deal with the issue. For the modeling, we tried several models(SVM, VGG16, KNN, Random Forest) and according to the accuracy, AUC score, training time, and testing time, we found XGboost with smoke improve the baseline model the most. 
 
-+ Project Results: The following table is our model results.
-<img src="figs/Results.png" width="500"/>
++ Project Results: The following table is our model results. 
+<img src="figs/Results.png" width="1000"/>
 
 **Contribution statement**: ([default](doc/a_note_on_contributions.md)) All team members contribute to this project. All team members approve our work presented in this GitHub repository including this contributions statement. 
 + Tianle Zhu:
