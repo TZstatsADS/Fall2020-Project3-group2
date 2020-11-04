@@ -4,8 +4,6 @@
 
 The doc directory contains the report or presentation files. It can have subfolders.  
 
-- main.Rmd: Baseline Gradient Boosting Machine (GBM) Model and Improved Support Vector Machine (SVM) Model  
-- main.html
 - Main.Rmd: Baseline Gradient Boosting Machine (GBM) Model and Improved XGBoost Model 
 - Main.html
 
