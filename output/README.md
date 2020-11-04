@@ -34,6 +34,11 @@ Main_SVM:
 - err_svm_imp.RDS
 - cost_best_svm_imp.RDS
 - fit_train_svm_imp.RDS
+- tm_test_svm_imp.RDS
+- tm_train_svm_imp.RDS
+- tm_feature_train_imp.RDS
+- tm_feature_test_imp.RDS
+
 
 Main_XGB:
 - res_cv_rw.RData
