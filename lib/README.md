@@ -1,4 +1,4 @@
-# Project 2: Shiny App Development
+# Project 3: Can you recognize the emotion from an image of a face?
 
 ### Code lib Folder
 
