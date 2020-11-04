@@ -6,7 +6,7 @@ The data directory contains data used in the analysis. This is treated as read o
 - README.md
 - train_set folder:
 **Please download the train_set folder from following link**
-**Link**
+**Link: https://drive.google.com/drive/folders/1wqlAyRf-eLKCk_8hXNQlKgi-o4pEFu0Q?usp=sharing **
 	- images folder (3000 images)
 	- label.csv (simple or compound)
 	- points folder (3000 mat files)
